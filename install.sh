@@ -79,6 +79,9 @@ curl -sL "${RAW_BASE}/package.json" | node -e "
 curl -sL "${RAW_BASE}/commands/co2/update.md" -o "${COMMANDS_DIR}/update.md"
 curl -sL "${RAW_BASE}/workflows/update.md" -o "${WORKFLOW_DIR}/update.md"
 
+# Create package.json for ES module support
+echo '{"type":"module"}' > "${INSTALL_DIR}/package.json"
+
 echo "  ✓ Files installed to ${INSTALL_DIR}"
 
 # Build statusline command
