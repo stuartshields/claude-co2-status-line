@@ -1,4 +1,4 @@
-# claude-co2-status-line
+# Claude CO2 Status Line
 
 A Claude Code status line plugin that displays cumulative energy usage and CO2 estimates for your session.
 
