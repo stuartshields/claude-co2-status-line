@@ -2,10 +2,10 @@
 // Check for CO2 status line updates in background, write result to cache
 // Called by SessionStart hook — runs once per session
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const { spawn } = require('child_process');
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { spawn } from 'node:child_process';
 
 const homeDir = os.homedir();
 const claudeDir = process.env.CLAUDE_CONFIG_DIR || path.join(homeDir, '.claude');
