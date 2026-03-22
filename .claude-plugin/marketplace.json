@@ -1,0 +1,17 @@
+{
+	"name": "claude-co2-status-line",
+	"owner": {
+		"name": "Stuart Shields"
+	},
+	"plugins": [
+		{
+			"name": "co2-status-line",
+			"description": "Status line showing cumulative token usage, energy estimate, CO2 equivalent, and water usage",
+			"source": "./",
+			"version": "1.2.0",
+			"homepage": "https://github.com/stuartshields/claude-co2-status-line",
+			"license": "MIT",
+			"keywords": ["statusline", "carbon", "energy", "tokens", "co2"]
+		}
+	]
+}
