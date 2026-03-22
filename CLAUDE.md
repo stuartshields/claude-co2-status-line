@@ -24,7 +24,7 @@ Add to `~/.claude/settings.json`:
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest"
+    "command": "npx -y claude-co2-status-line@latest"
   }
 }
 ```
@@ -38,7 +38,7 @@ CO2 line below it. Works with GSD, claude-hud, or any other statusline script:
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest --wrap 'your-existing-statusline-command'"
+    "command": "npx -y claude-co2-status-line@latest --wrap 'your-existing-statusline-command'"
   }
 }
 ```
@@ -55,7 +55,7 @@ Point directly to the source for development:
 {
   "statusLine": {
     "type": "command",
-    "command": "node \"/path/to/co2-status-line/src/statusline.js\""
+    "command": "node \"/path/to/claude-co2-status-line/src/statusline.js\""
   }
 }
 ```

@@ -1,4 +1,4 @@
-# co2-status-line
+# claude-co2-status-line
 
 A Claude Code status line plugin that displays cumulative energy usage and CO2 estimates for your session.
 
@@ -57,7 +57,7 @@ Add to your `~/.claude/settings.json`:
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest"
+    "command": "npx -y claude-co2-status-line@latest"
   }
 }
 ```
@@ -70,7 +70,7 @@ Already have a statusline (GSD, claude-hud, etc.)? Use `--wrap` to keep it and a
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest --wrap 'your-existing-statusline-command'"
+    "command": "npx -y claude-co2-status-line@latest --wrap 'your-existing-statusline-command'"
   }
 }
 ```
@@ -81,7 +81,7 @@ Example with GSD statusline:
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest --wrap 'node ~/.claude/hooks/gsd-statusline.js'"
+    "command": "npx -y claude-co2-status-line@latest --wrap 'node ~/.claude/hooks/gsd-statusline.js'"
   }
 }
 ```
@@ -103,7 +103,7 @@ Combine with any other flags:
 {
   "statusLine": {
     "type": "command",
-    "command": "npx -y co2-status-line@latest --track --wrap 'your-existing-statusline-command'"
+    "command": "npx -y claude-co2-status-line@latest --track --wrap 'your-existing-statusline-command'"
   }
 }
 ```
@@ -118,7 +118,7 @@ Clone the repo and point to it directly:
 {
   "statusLine": {
     "type": "command",
-    "command": "node \"/path/to/co2-status-line/src/statusline.js\""
+    "command": "node \"/path/to/claude-co2-status-line/src/statusline.js\""
   }
 }
 ```
