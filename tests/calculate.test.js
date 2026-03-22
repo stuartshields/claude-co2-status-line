@@ -3,14 +3,19 @@ import assert from 'node:assert/strict';
 import {
 	energyFromTokens,
 	co2FromEnergy,
+	waterFromEnergy,
 	formatTokens,
 	formatEnergy,
 	formatCO2,
+	formatWater,
 	WH_PER_MTOK_INPUT,
 	WH_PER_MTOK_OUTPUT,
 	WH_PER_MTOK_CACHE_CREATE,
 	WH_PER_MTOK_CACHE_READ,
 	CO2_GRAMS_PER_KWH,
+	WUE_SITE,
+	WUE_SOURCE,
+	PUE,
 } from '../src/calculate.js';
 
 describe('energyFromTokens', () => {
@@ -125,6 +130,18 @@ describe('constants match FORMULAS.md', () => {
 	test('carbon intensity is 548 g CO2/kWh', () => {
 		assert.equal(CO2_GRAMS_PER_KWH, 548);
 	});
+
+	test('WUE site is 0.30 L/kWh', () => {
+		assert.equal(WUE_SITE, 0.30);
+	});
+
+	test('WUE source is 3.142 L/kWh', () => {
+		assert.equal(WUE_SOURCE, 3.142);
+	});
+
+	test('PUE is 1.12', () => {
+		assert.equal(PUE, 1.12);
+	});
 });
 
 describe('formatTokens', () => {
@@ -168,6 +185,47 @@ describe('formatEnergy', () => {
 
 	test('zero', () => {
 		assert.equal(formatEnergy(0), '0.0 Wh');
+	});
+});
+
+describe('waterFromEnergy', () => {
+	test('zero energy returns zero', () => {
+		assert.equal(waterFromEnergy(0), 0);
+	});
+
+	test('1 kWh = ~3.41 L', () => {
+		const result = waterFromEnergy(1000);
+		// (1/1.12) * 0.30 + 1 * 3.142 = 0.2679 + 3.142 = 3.4099
+		assert.ok(result > 3.40 && result < 3.42, `Expected ~3.41, got ${result}`);
+	});
+
+	test('40 Wh (typical session) = ~136 ml', () => {
+		const result = waterFromEnergy(40);
+		// 0.04 kWh: (0.04/1.12)*0.30 + 0.04*3.142 = 0.01071 + 0.12568 = 0.1364 L
+		const ml = result * 1000;
+		assert.ok(ml > 135 && ml < 137, `Expected ~136 ml, got ${ml}`);
+	});
+});
+
+describe('formatWater', () => {
+	test('sub-litre shows ml', () => {
+		assert.equal(formatWater(0.136), '136ml');
+	});
+
+	test('litres range', () => {
+		assert.equal(formatWater(3.4), '3.4L');
+	});
+
+	test('zero', () => {
+		assert.equal(formatWater(0), '0ml');
+	});
+
+	test('exactly 1L', () => {
+		assert.equal(formatWater(1.0), '1.0L');
+	});
+
+	test('small ml values', () => {
+		assert.equal(formatWater(0.005), '5ml');
 	});
 });
 

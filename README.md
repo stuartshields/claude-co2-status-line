@@ -1,17 +1,18 @@
 # Claude CO2 Status Line
 
-A Claude Code status line plugin that shows how much energy and CO2 your session is burning through.
+A Claude Code status line plugin that shows how much energy, CO2, and water your session is burning through.
 
 ```
-⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 📊 53.0k tokens
+⚡ 40.0 Wh │ 🌱 21.9g CO2 │ 💧 137ml │ 📊 100.5k tokens
 ```
 
 ## How it works
 
-After each interaction, the status line shows three things:
+After each interaction, the status line shows four things:
 
 - **Energy (Wh)** - estimated electricity used by the LLM inference
 - **CO2 (g)** - estimated carbon emissions based on data center grid intensity
+- **Water (ml)** - estimated water for cooling and electricity generation
 - **Tokens** - cumulative input + output tokens for the session
 
 Numbers accumulate across the session and update after each assistant message.
@@ -39,11 +40,15 @@ Here's how the Epoch AI methodology works:
 
 **CO2 per kWh** uses **548 g CO2/kWh**, the US data center average from a [2024 ScienceDirect study of 1,795 data centers](https://www.sciencedirect.com/science/article/pii/S2666389925002788). That's a lot higher than the national grid average of 367 g/kWh ([US EIA, 2023](https://www.eia.gov/tools/faqs/faq.php?id=74&t=11)) because data centers tend to sit in regions with dirtier power. About 56% of US data center electricity came from fossil fuels in 2023-2024.
 
+**Water per kWh** uses constants from ["How Hungry is AI?"](https://arxiv.org/html/2505.09598v1) (2025), a paper that benchmarked 30 LLMs including Claude 3.7 Sonnet. Water consumption has two parts: on-site cooling (0.30 L/kWh) and off-site water used to generate the electricity (3.142 L/kWh, US average). The electricity generation side is about 92% of the total.
+
+The water constants come from Azure infrastructure. Anthropic runs on AWS and GCP, which report slightly different on-site WUE numbers (AWS is lower at 0.18 L/kWh). But since off-site water dominates, the cloud provider difference is small. Also, the paper tested Claude 3.7 Sonnet - we're now on Claude 4.5/4.6. The water formula takes energy as input though, so if the energy estimate is in the right ballpark, the water estimate follows.
+
 Full details on every constant, formula, and source URL in [FORMULAS.md](./FORMULAS.md).
 
 ### In practice
 
-A typical Claude Code session (~100k input tokens, ~500 output tokens) uses about **40 Wh** and produces roughly **22g of CO2**. That's like charging your phone halfway, or driving a car about 100 meters.
+A typical Claude Code session (~100k input tokens, ~500 output tokens) uses about **40 Wh**, produces roughly **22g of CO2**, and consumes about **137ml of water**. That's like charging your phone halfway, or about a third of a bottle of water.
 
 These are order-of-magnitude numbers. The real figures depend on model architecture, hardware, data center location, and plenty of other stuff that isn't public.
 
@@ -93,8 +98,8 @@ The wrapped command's output shows on line 1, CO2 metrics on line 2. If the wrap
 Add `--track` to keep a running total across sessions. Totals get saved to `~/.claude/co2-totals.json` and show up as a second line:
 
 ```
-⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 📊 53.0k tokens
-∑ 1.2 kWh │ 687.4g CO2 │ 2.4M tokens │ 14 sessions
+⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 💧 87ml │ 📊 53.0k tokens
+∑ 1.2 kWh │ 687.4g CO2 │ 4.1L │ 2.4M tokens │ 14 sessions
 ```
 
 Works with all the other flags:

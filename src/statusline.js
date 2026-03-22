@@ -20,9 +20,11 @@ import os from 'node:os';
 import {
 	energyFromTokens,
 	co2FromEnergy,
+	waterFromEnergy,
 	formatTokens,
 	formatEnergy,
 	formatCO2,
+	formatWater,
 } from './calculate.js';
 
 // Parse CLI flags
@@ -110,6 +112,7 @@ process.stdin.on('end', () => {
 		});
 
 		const co2Grams = co2FromEnergy(energyWh);
+		const waterLitres = waterFromEnergy(energyWh);
 		const totalTokens = totalInput + totalOutput;
 
 		const DIM = '\x1b[2m';
@@ -119,6 +122,7 @@ process.stdin.on('end', () => {
 		process.stdout.write(
 			`${DIM}⚡${RESET} ${formatEnergy(energyWh)} ${DIM}│${RESET} ` +
 			`${DIM}🌱${RESET} ${formatCO2(co2Grams)} CO2 ${DIM}│${RESET} ` +
+			`${DIM}💧${RESET} ${formatWater(waterLitres)} ${DIM}│${RESET} ` +
 			`${DIM}📊${RESET} ${formatTokens(totalTokens)} tokens`
 		);
 
@@ -154,11 +158,12 @@ process.stdin.on('end', () => {
 				outputTokens: allOutput,
 			});
 			const allCO2 = co2FromEnergy(allEnergy);
+			const allWater = waterFromEnergy(allEnergy);
 			const sessionCount = totals.sessions + 1;
 
 			process.stdout.write(
 				`\n${DIM}∑ ${formatEnergy(allEnergy)} │ ${formatCO2(allCO2)} CO2 │ ` +
-				`${formatTokens(allTokens)} tokens │ ${sessionCount} sessions${RESET}`
+				`${formatWater(allWater)} │ ${formatTokens(allTokens)} tokens │ ${sessionCount} sessions${RESET}`
 			);
 		}
 	} catch {

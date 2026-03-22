@@ -12,6 +12,12 @@ export const WH_PER_MTOK_CACHE_READ = 39;
 // Source: ScienceDirect 2024, US data center average (see FORMULAS.md)
 export const CO2_GRAMS_PER_KWH = 548;
 
+// Water usage constants for LLM inference
+// Source: "How Hungry is AI?" (2025), Azure infrastructure (see FORMULAS.md)
+export const WUE_SITE = 0.30;    // L/kWh - on-site cooling water
+export const WUE_SOURCE = 3.142; // L/kWh - off-site water (electricity generation)
+export const PUE = 1.12;         // Power Usage Effectiveness
+
 /**
  * Estimate energy consumption from token counts.
  * @param {object} tokens
@@ -42,6 +48,28 @@ export function energyFromTokens({
  */
 export function co2FromEnergy(wh) {
 	return wh * CO2_GRAMS_PER_KWH / 1000;
+}
+
+/**
+ * Estimate water consumption from energy usage.
+ * Uses on-site cooling + off-site electricity generation water.
+ * @param {number} wh - Energy in watt-hours
+ * @returns {number} Water in litres
+ */
+export function waterFromEnergy(wh) {
+	const kwh = wh / 1000;
+	return (kwh / PUE) * WUE_SITE + kwh * WUE_SOURCE;
+}
+
+/**
+ * Format water for display.
+ * @param {number} litres
+ * @returns {string} e.g. "136ml", "3.4L"
+ */
+export function formatWater(litres) {
+	if (litres >= 1) return `${litres.toFixed(1)}L`;
+	const ml = Math.round(litres * 1000);
+	return `${ml}ml`;
 }
 
 /**

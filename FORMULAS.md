@@ -51,13 +51,56 @@ runs in data centers which skew toward carbon-intensive grid regions.
   https://www.sciencedirect.com/science/article/pii/S2666389925002788
   Accessed: 2026-03-22
 
-## Combined Formula
+## Water from Energy
+
+Water consumption has two components: on-site cooling and off-site water
+used to generate the electricity.
+
+```
+water_litres = (energy_kwh / PUE) × WUE_site + energy_kwh × WUE_source
+```
+
+| Constant   | Value        | Notes                                     |
+|------------|--------------|-------------------------------------------|
+| PUE        | 1.12         | Power Usage Effectiveness (Azure)         |
+| WUE_site   | 0.30 L/kWh   | On-site cooling water                     |
+| WUE_source | 3.142 L/kWh  | Off-site water (US electricity generation)|
+
+Off-site water (generating the electricity) accounts for about 92% of total
+water consumption. On-site cooling is a relatively small component.
+
+Combined rate: ~3.41 L/kWh (or ~3.41 ml/Wh).
+
+### Sources
+
+- "How Hungry is AI? Benchmarking Energy, Water, and Carbon Footprint
+  of LLM Inference" (2025)
+  https://arxiv.org/html/2505.09598v1
+  Accessed: 2026-03-22
+
+### Water estimate caveats
+
+The water constants come from a 2025 paper that tested 30 models including
+Claude 3.7 Sonnet on Azure infrastructure. Since then:
+
+- **Model generations have changed.** We're on Claude 4.5/4.6 now, with
+  different architecture and hardware. The water formula takes energy as
+  input though, so if the energy estimate is reasonable, water follows.
+- **Anthropic uses AWS and GCP, not Azure.** AWS reports a lower on-site
+  WUE (0.18 vs 0.30 L/kWh), but since off-site water dominates (92%),
+  the cloud provider difference is small.
+- **WUE varies by location and season.** Summer cooling needs can be 2-3x
+  winter levels depending on climate.
+
+## Combined Formulas
 
 ```
 energy_wh = (input_tokens × 390 + output_tokens × 1950 +
              cache_creation × 490 + cache_read × 39) / 1_000_000
 
 co2_grams = energy_wh × 548 / 1000
+
+water_litres = (energy_wh / 1000 / 1.12) × 0.30 + (energy_wh / 1000) × 3.142
 ```
 
 ## Caveats
