@@ -1,6 +1,6 @@
 # Claude CO2 Status Line
 
-A Claude Code status line plugin that shows how much energy, CO2, and water your session is burning through.
+A Claude Code plugin that shows how much energy, CO2, and water your session is burning through.
 
 ```
 ⚡ 40.0 Wh │ 🌱 21.9g CO2 │ 💧 137ml │ 📊 100.5k tokens
@@ -16,6 +16,80 @@ After each interaction, the status line shows four things:
 - **Tokens** - cumulative input + output tokens for the session
 
 Numbers accumulate across the session and update after each assistant message.
+
+## Install
+
+### Plugin install (recommended)
+
+```
+/plugin marketplace add stuartshields/claude-co2-status-line
+/plugin install co2-status-line@claude-co2-status-line
+```
+
+Then run the setup skill to configure your statusline:
+
+```
+/co2-status-line:setup
+```
+
+The setup skill detects any existing statusline and offers to wrap it (keeping your current statusline on line 1, CO2 metrics on line 2).
+
+### Composing with an existing statusline
+
+`/co2-status-line:setup` handles this automatically — it detects your existing statusline (GSD, claude-hud, etc.) and offers to wrap it using the `--wrap` flag. The wrapped command's output shows on line 1, CO2 metrics on line 2. If the wrapped command fails, you still get the CO2 line.
+
+### All-time tracking (opt-in)
+
+Add `--track` to the statusline command in `~/.claude/settings.json` after setup:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node \"<plugin-path>/src/statusline.js\" --track"
+  }
+}
+```
+
+Totals get saved to `~/.claude/co2-totals.json` and show up as a second line:
+
+```
+⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 💧 87ml │ 📊 53.0k tokens
+∑ 1.2 kWh │ 687.4g CO2 │ 4.1L │ 2.4M tokens │ 14 sessions
+```
+
+Without `--track`, it's session-only and nothing hits disk.
+
+### Updating
+
+Run `/co2-status-line:update` inside Claude Code.
+
+### Uninstall
+
+```
+/plugin uninstall co2-status-line@claude-co2-status-line
+```
+
+Then remove the `statusLine` entry from `~/.claude/settings.json`.
+
+### Local development
+
+Clone the repo and load it directly:
+
+```bash
+claude --plugin-dir ./claude-co2-status-line
+```
+
+Or point your statusline at the source:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node \"/path/to/claude-co2-status-line/src/statusline.js\""
+  }
+}
+```
 
 ## Napkin math
 
@@ -51,71 +125,6 @@ Full details on every constant, formula, and source URL in [FORMULAS.md](./FORMU
 A typical Claude Code session (~100k input tokens, ~500 output tokens) uses about **40 Wh**, produces roughly **22g of CO2**, and consumes about **137ml of water**. That's like charging your phone halfway, or about a third of a bottle of water.
 
 These are order-of-magnitude numbers. The real figures depend on model architecture, hardware, data center location, and plenty of other stuff that isn't public.
-
-## Install
-
-### One-line install (recommended)
-
-```bash
-curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash
-```
-
-This copies files to `~/.claude/statusline/co2/`, updates your `settings.json`, and registers a background update checker.
-
-### Composing with an existing statusline
-
-Already running a statusline (GSD, claude-hud, etc.)? Use `--wrap` to keep it and add CO2 metrics as a second line:
-
-```bash
-curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --wrap 'node ~/.claude/hooks/gsd-statusline.js'
-```
-
-The wrapped command's output shows on line 1, CO2 metrics on line 2. If the wrapped command fails, you still get the CO2 line.
-
-### All-time tracking (opt-in)
-
-Add `--track` to the statusline command in `~/.claude/settings.json` after installing:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "node \"~/.claude/statusline/co2/statusline.js\" --track"
-  }
-}
-```
-
-Totals get saved to `~/.claude/co2-totals.json` and show up as a second line:
-
-```
-⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 💧 87ml │ 📊 53.0k tokens
-∑ 1.2 kWh │ 687.4g CO2 │ 4.1L │ 2.4M tokens │ 14 sessions
-```
-
-Without `--track`, it's session-only and nothing hits disk.
-
-### Updating
-
-Run `/co2:update` inside Claude Code, or re-run the install command.
-
-### Uninstall
-
-```bash
-curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --uninstall
-```
-
-### Local development
-
-Clone the repo and point to it:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "node \"/path/to/claude-co2-status-line/src/statusline.js\""
-  }
-}
-```
 
 ## Development
 
