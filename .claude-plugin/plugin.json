@@ -1,6 +1,6 @@
 {
 	"name": "co2-status-line",
-	"version": "1.2.1",
+	"version": "1.2.3",
 	"description": "Status line showing cumulative token usage, energy estimate, CO2 equivalent, and water usage for the current session",
 	"author": {
 		"name": "Stuart Shields"

@@ -1,6 +1,6 @@
 {
 	"name": "claude-co2-status-line",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"description": "Claude Code status line plugin showing energy usage and CO2 estimates",
 	"keywords": [
 		"claude-code",
