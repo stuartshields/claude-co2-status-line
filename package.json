@@ -1,6 +1,6 @@
 {
 	"name": "claude-co2-status-line",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"description": "Claude Code status line plugin showing energy usage and CO2 estimates",
 	"keywords": [
 		"claude-code",
@@ -21,17 +21,14 @@
 	"author": "Stuart Shields",
 	"type": "module",
 	"main": "./src/calculate.js",
-	"bin": {
-		"co2-status-line": "src/statusline.js"
-	},
 	"directories": {
 		"test": "tests"
 	},
 	"files": [
+		".claude-plugin/",
 		"src/",
-		"commands/",
-		"workflows/",
-		"install.sh",
+		"skills/",
+		"hooks/",
 		"FORMULAS.md",
 		"CHANGELOG.md"
 	],

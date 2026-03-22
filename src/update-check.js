@@ -6,12 +6,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const homeDir = os.homedir();
-const claudeDir = process.env.CLAUDE_CONFIG_DIR || path.join(homeDir, '.claude');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pluginRoot = path.resolve(__dirname, '..');
+
+const claudeDir = process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude');
 const cacheDir = path.join(claudeDir, 'cache');
 const cacheFile = path.join(cacheDir, 'co2-update-check.json');
-const versionFile = path.join(claudeDir, 'statusline', 'co2', 'VERSION');
+
+// Read version from plugin's package.json
+const packageJsonPath = path.join(pluginRoot, 'package.json');
 
 // Ensure cache directory exists
 if (!fs.existsSync(cacheDir)) {
@@ -21,21 +26,19 @@ if (!fs.existsSync(cacheDir)) {
 // Run check in background (non-blocking)
 const child = spawn(process.execPath, ['-e', `
 	const fs = require('fs');
-	const { execSync } = require('child_process');
 	const https = require('https');
 
 	const cacheFile = ${JSON.stringify(cacheFile)};
-	const versionFile = ${JSON.stringify(versionFile)};
+	const packageJsonPath = ${JSON.stringify(packageJsonPath)};
 
-	// Read installed version
+	// Read installed version from package.json
 	let installed = '0.0.0';
 	try {
-		if (fs.existsSync(versionFile)) {
-			installed = fs.readFileSync(versionFile, 'utf8').trim();
-		}
+		const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+		installed = pkg.version || '0.0.0';
 	} catch (e) {}
 
-	// Check latest version from GitHub (avoids npm registry cache issues)
+	// Check latest version from GitHub
 	function checkLatest() {
 		return new Promise((resolve) => {
 			const url = 'https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/package.json';
