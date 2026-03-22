@@ -8,7 +8,7 @@
 			"name": "co2-status-line",
 			"description": "Status line showing cumulative token usage, energy estimate, CO2 equivalent, and water usage",
 			"source": "./",
-			"version": "1.2.3",
+			"version": "1.2.4",
 			"homepage": "https://github.com/stuartshields/claude-co2-status-line",
 			"license": "MIT",
 			"keywords": ["statusline", "carbon", "energy", "tokens", "co2"]
