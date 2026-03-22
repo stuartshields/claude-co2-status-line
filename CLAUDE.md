@@ -16,36 +16,37 @@ energy estimate, and CO2 equivalent for the current session.
 
 ## Installation
 
-### Via npx (zero-install, recommended for other users)
+### One-line install (recommended)
 
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest"
-  }
-}
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash
 ```
+
+This copies files to `~/.claude/statusline/co2/`, updates `settings.json`,
+and registers a SessionStart hook for update checking.
 
 ### Composing with an existing statusline
 
 Use `--wrap` to run any existing statusline command first, then append the
 CO2 line below it. Works with GSD, claude-hud, or any other statusline script:
 
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest --wrap 'your-existing-statusline-command'"
-  }
-}
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --wrap 'node ~/.claude/hooks/gsd-statusline.js'
 ```
 
 The wrapped command receives the same stdin JSON. Its output appears on
 line 1, CO2 metrics on line 2. If the wrapped command fails, only the
 CO2 line is shown.
+
+### Uninstall
+
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --uninstall
+```
+
+### Updating
+
+Run `/co2:update` inside Claude Code, or re-run the install command above.
 
 ### Local development
 
@@ -64,7 +65,12 @@ Point directly to the source for development:
 
 - `src/calculate.js` — Pure calculation functions + constants
 - `src/statusline.js` — Status line script (reads stdin JSON, outputs formatted line)
+- `src/update-check.js` — SessionStart hook for background update checking
 - `tests/calculate.test.js` — Tests for calculation functions
+- `install.sh` — Curl-able installer (copies to `~/.claude/statusline/co2/`)
+- `commands/co2/update.md` — `/co2:update` skill descriptor
+- `workflows/update.md` — Update workflow (version check, changelog, install)
+- `CHANGELOG.md` — Version history (fetched by update workflow)
 - `FORMULAS.md` — All formulas, constants, and source citations
 
 ## Conventions

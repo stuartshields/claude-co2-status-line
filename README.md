@@ -54,68 +54,57 @@ These are order-of-magnitude numbers. The real figures depend on model architect
 
 ## Install
 
-### Via npx (recommended)
+### One-line install (recommended)
 
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest"
-  }
-}
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash
 ```
+
+This copies files to `~/.claude/statusline/co2/`, updates your `settings.json`, and registers a background update checker.
 
 ### Composing with an existing statusline
 
 Already running a statusline (GSD, claude-hud, etc.)? Use `--wrap` to keep it and add CO2 metrics as a second line:
 
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest --wrap 'your-existing-statusline-command'"
-  }
-}
-```
-
-Example with GSD:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest --wrap 'node ~/.claude/hooks/gsd-statusline.js'"
-  }
-}
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --wrap 'node ~/.claude/hooks/gsd-statusline.js'
 ```
 
 The wrapped command's output shows on line 1, CO2 metrics on line 2. If the wrapped command fails, you still get the CO2 line.
 
 ### All-time tracking (opt-in)
 
-Add `--track` to keep a running total across sessions. Totals get saved to `~/.claude/co2-totals.json` and show up as a second line:
+Add `--track` to the statusline command in `~/.claude/settings.json` after installing:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node \"~/.claude/statusline/co2/statusline.js\" --track"
+  }
+}
+```
+
+Totals get saved to `~/.claude/co2-totals.json` and show up as a second line:
 
 ```
 ⚡ 25.4 Wh │ 🌱 13.9g CO2 │ 💧 87ml │ 📊 53.0k tokens
 ∑ 1.2 kWh │ 687.4g CO2 │ 4.1L │ 2.4M tokens │ 14 sessions
 ```
 
-Works with all the other flags:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y claude-co2-status-line@latest --track --wrap 'your-existing-statusline-command'"
-  }
-}
-```
-
 Without `--track`, it's session-only and nothing hits disk.
 
-### Local install
+### Updating
+
+Run `/co2:update` inside Claude Code, or re-run the install command.
+
+### Uninstall
+
+```bash
+curl -sL https://raw.githubusercontent.com/stuartshields/claude-co2-status-line/main/install.sh | bash -s -- --uninstall
+```
+
+### Local development
 
 Clone the repo and point to it:
 
